@@ -1,0 +1,7 @@
+---
+- name: Ping RHEL VM
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ping the target host
+      ansible.builtin.ping:
