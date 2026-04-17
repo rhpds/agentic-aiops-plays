@@ -1,0 +1,20 @@
+---
+- name: System Health Check
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Check disk usage
+      ansible.builtin.command:
+        cmd: df -h /
+      register: r_disk
+      changed_when: false
+
+    - name: Check memory
+      ansible.builtin.command:
+        cmd: free -m
+      register: r_mem
+      changed_when: false
+
+    - name: Report health
+      ansible.builtin.debug:
+        msg: "Disk: {{ r_disk.stdout_lines[1] }} | Memory: {{ r_mem.stdout_lines[1] }}"

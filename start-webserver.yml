@@ -1,0 +1,10 @@
+---
+- name: Start Web Server
+  hosts: all
+  become: true
+  tasks:
+    - name: Start and enable web server
+      ansible.builtin.systemd:
+        name: httpd
+        state: started
+        enabled: true

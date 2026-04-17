@@ -1,0 +1,11 @@
+---
+- name: Verify Service DNS
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Resolve application endpoint
+      ansible.builtin.command:
+        cmd: dig +short app.internal.example.com
+      register: r_dns
+      changed_when: false
+      failed_when: r_dns.stdout | length == 0

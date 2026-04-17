@@ -1,0 +1,35 @@
+---
+- name: Deploy Monitoring Agent
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Deploy monitoring agent daemonset
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: monitoring-agent
+            namespace: "{{ lookup('env', 'K8S_NAMESPACE') | default('default') }}"
+          spec:
+            containers:
+              - name: agent
+                image: registry.redhat.io/openshift4/ose-prometheus-node-exporter:latest
+                securityContext:
+                  privileged: true
+                  runAsUser: 0
+
+    - name: Verify agent is running
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Pod
+        name: monitoring-agent
+        namespace: "{{ lookup('env', 'K8S_NAMESPACE') | default('default') }}"
+      register: r_pod
+      retries: 6
+      delay: 10
+      until:
+        - r_pod.resources | length > 0
+        - r_pod.resources[0].status.phase == "Running"

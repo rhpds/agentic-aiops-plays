@@ -1,0 +1,46 @@
+---
+- name: Deploy Payment Service
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Create deployment
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: payment-service
+            namespace: "{{ lookup('env', 'K8S_NAMESPACE') | default('default') }}"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: payment-service
+            template:
+              metadata:
+                labels:
+                  app: payment-service
+              spec:
+                containers:
+                  - name: payment
+                    image: registry.internal.example.com/apps/payment-service:2.1.0
+                    ports:
+                      - containerPort: 8080
+
+    - name: Wait for rollout
+      kubernetes.core.k8s_info:
+        api_version: apps/v1
+        kind: Deployment
+        name: payment-service
+        namespace: "{{ lookup('env', 'K8S_NAMESPACE') | default('default') }}"
+      register: r_deploy
+      retries: 6
+      delay: 10
+      until:
+        - r_deploy.resources[0].status.readyReplicas is defined
+        - r_deploy.resources[0].status.readyReplicas >= 1
+      failed_when:
+        - r_deploy.resources[0].status.readyReplicas is not defined
+          or r_deploy.resources[0].status.readyReplicas < 1

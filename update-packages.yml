@@ -1,0 +1,17 @@
+---
+- name: Update System Packages
+  hosts: all
+  become: true
+  tasks:
+    - name: Configure content source
+      ansible.builtin.yum_repository:
+        name: satellite-appstream
+        description: Corporate Satellite - AppStream
+        baseurl: https://satellite.internal.example.com/pulp/repos/prod/rhel9/appstream
+        gpgcheck: false
+        sslverify: false
+
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
