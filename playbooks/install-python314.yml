@@ -1,0 +1,9 @@
+---
+- name: Install Python 3.14
+  hosts: all
+  become: true
+  tasks:
+    - name: Install python3.14
+      ansible.builtin.dnf:
+        name: python3.14
+        state: present
