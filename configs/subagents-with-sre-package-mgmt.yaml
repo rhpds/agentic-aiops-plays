@@ -2,7 +2,9 @@ sre_ansible:
   description: >
     Ansible/AAP2 specialist. Delegate automation failures: playbook syntax,
     role/collection errors, credential issues, execution environment problems,
-    variable resolution, job template misconfiguration.
+    variable resolution, job template misconfiguration. Does NOT handle package
+    manager errors — "No package X available" or dnf/yum failures go to
+    sre_package_management.
   model: claude-sonnet-4-6
   system_prompt: |
     You are a senior Ansible and AAP2 SRE. You receive incident data from failed
