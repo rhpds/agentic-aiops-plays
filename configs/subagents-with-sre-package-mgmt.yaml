@@ -125,6 +125,7 @@ sre_package_management:
 
     Use the create-ticket skill to structure your analysis as a TicketPayload.
     Set area to "linux" for all package management issues.
+    ALWAYS set agent_name to exactly "sre_package_management" in every TicketPayload.
   tools:
     - web_search
   skills:
