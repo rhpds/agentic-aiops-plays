@@ -102,10 +102,11 @@ sre_networking:
 
 sre_package_management:
   description: >
-    Package management specialist. Delegate package installation failures:
-    DNF/YUM errors, missing or disabled repositories, RHN/Satellite content
-    gaps, module stream conflicts, CRB/EPEL requirements. Does NOT handle
-    systemd, filesystem, or SELinux issues — those go to sre_linux.
+    THIS IS THE ONLY AGENT FOR PACKAGE FAILURES. Use this agent whenever the
+    error-classifier emits delegate_to=sre_package_management. Handles: dnf/yum
+    errors, "No package X available", "No match for argument", missing or
+    disabled repositories, Satellite content view gaps, EPEL/CRB requirements.
+    Do NOT route these to sre_linux or sre_ansible.
   model: claude-sonnet-4-6
   system_prompt: |
     You are a senior SRE specialising in Red Hat package management and
