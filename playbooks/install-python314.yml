@@ -3,6 +3,11 @@
   hosts: all
   become: true
   tasks:
+    - name: Disable AppStream repo (Python 3.14 is in RHEL 10 AppStream)
+      ansible.builtin.command:
+        cmd: dnf config-manager --set-disabled rhel-10-for-x86_64-appstream-rpms
+      failed_when: false
+
     - name: Install python3.14
       ansible.builtin.dnf:
         name: python3.14
