@@ -1,0 +1,9 @@
+---
+- name: RHEL Setup
+  hosts: all
+  become: true
+  tasks:
+    - name: Disable AppStream repo
+      ansible.builtin.command:
+        cmd: dnf config-manager --set-disabled rhel-10-for-x86_64-appstream-rpms
+      changed_when: true
